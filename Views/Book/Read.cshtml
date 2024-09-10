@@ -1,3 +1,5 @@
+@model List<BooksWeb.Models.Book>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +8,8 @@
     <title>Document</title>
 </head>
 <body>
-    Classe "Book" método "Read".
+    @foreach(var book in Model) {
+        <span>@book.Title</span><br/>
+    }
 </body>
 </html>
