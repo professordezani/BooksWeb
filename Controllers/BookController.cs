@@ -16,11 +16,13 @@ public class BookController : Controller
         return View(books);
     }
 
+    [HttpGet]
     public ActionResult Create()
     {
         return View();
     }
 
+    [HttpPost]
     public ActionResult Create(Book model)
     {
         books.Add(model);
