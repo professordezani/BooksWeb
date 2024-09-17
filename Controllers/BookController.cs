@@ -6,23 +6,24 @@ namespace BooksWeb.Controllers;
 // https://localhost:1234/book/
 public class BookController : Controller
 {
+    public static List<Book> books = new List<Book>();
+
     // https://localhost:1234/book/read
     // controller = classe
     // action = método
     public ActionResult Read()
-    {
-        Book book1 = new Book();
-        book1.Title = "Código da Vinci";
-        book1.Author = "Dan Brown";
-
-        Book book2 = new Book();
-        book2.Title = "Símbolo Perdido";
-        book2.Author = "Dan Brown";
-
-        List<Book> books = new List<Book>();
-        books.Add(book1);
-        books.Add(book2);
-        
+    {        
         return View(books);
+    }
+
+    public ActionResult Create()
+    {
+        return View();
+    }
+
+    public ActionResult Create(Book model)
+    {
+        books.Add(model);
+        return RedirectToAction("Read");
     }
 }
