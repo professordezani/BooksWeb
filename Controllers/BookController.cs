@@ -6,14 +6,18 @@ namespace BooksWeb.Controllers;
 // https://localhost:1234/book/
 public class BookController : Controller
 {
-    public static List<Book> books = new List<Book>();
+    private readonly BookDatabase db;
+
+    public BookController(BookDatabase db) {
+        this.db = db;
+    }
 
     // https://localhost:1234/book/read
     // controller = classe
     // action = método
     public ActionResult Read()
     {        
-        return View(books);
+        return View(db.Books.ToList()); // ~ SELECT * FROM Books
     }
 
     [HttpGet]
@@ -25,7 +29,8 @@ public class BookController : Controller
     [HttpPost]
     public ActionResult Create(Book model)
     {
-        books.Add(model);
+        db.Books.Add(model); // ~ INSERT INTO Books VALUES (mode.Title...)
+        db.SaveChanges();
         return RedirectToAction("Read");
     }
 }
