@@ -10,6 +10,6 @@ builder.Services.AddDbContext<BookDatabase>(options => options.UseInMemoryDataba
 
 var app = builder.Build();
 
-app.MapControllerRoute("default", "/{controller=Book}/{action=Read}");
+app.MapControllerRoute("default", "/{controller=Book}/{action=Read}/{id?}");
 
 app.Run();
