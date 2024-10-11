@@ -16,7 +16,9 @@ public class BookController : Controller
     // controller = classe
     // action = método
     public ActionResult Read()
-    {        
+    {     
+        var userName = HttpContext.Session.GetString("userName");
+        ViewBag.userName = userName;
         return View(db.Books.ToList()); // ~ SELECT * FROM Books
     }
 

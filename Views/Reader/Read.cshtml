@@ -1,4 +1,4 @@
-@model List<BooksWeb.Models.Book>
+@model List<BooksWeb.Models.Reader>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,13 +10,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="container">
-    <h2>Books</h2>
-
-    <div>@ViewBag.userName</div>
+    <h2>Readers</h2>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Books</li>
+            <li class="breadcrumb-item active" aria-current="page">Readers</li>
         </ol>
     </nav>
 
@@ -24,28 +22,24 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Gender</th>
-                <th>Synopsis</th>
+                <th>Name</th>
+                <th>Email</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
-        @foreach(var book in Model) {
+        @foreach(var reader in Model) {
         <tr>
-            <td>@book.BookId</td>
-            <td>@book.Title</td>
-            <td>@book.Author</td>
-            <td>@book.Gender</td>
-            <td>@book.Synopsis</td>
+            <td>@reader.ReaderId</td>
+            <td>@reader.Name</td>
+            <td>@reader.Email</td>
             <td>
                 <div class="btn-group" role="group">
 
-                    <a href="/book/update/@book.BookId" class="btn btn-sm btn-outline-success">
+                    <a href="/reader/update/@reader.ReaderId" class="btn btn-sm btn-outline-success">
                         <i class="bi-pencil-square"></i> Edit
                     </a>
 
-                    <a href="/book/delete/@book.BookId" class="btn btn-sm btn-outline-danger">
+                    <a href="/reader/delete/@reader.ReaderId" class="btn btn-sm btn-outline-danger">
                         <i class="bi-trash"></i> Delete
                     </a>
                     
@@ -55,7 +49,7 @@
         }
     </table>
 
-    <a class="btn btn-primary" href="/book/create">Adicionar</a>
+    <a class="btn btn-primary" href="/reader/create">Adicionar</a>
 
 </body>
 </html>
