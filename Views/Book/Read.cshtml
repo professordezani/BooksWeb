@@ -29,7 +29,6 @@
                 <th>Gender</th>
                 <th>Synopsis</th>
                 <th>Status</th>
-                <th>Score</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -42,15 +41,24 @@
             <td>@book.Book.Synopsis</td>
             <td>
                 @if(book.Status == null) {
-                    <a href="/book/bookmark/@book.BookId" class="btn btn-sm btn-outline-success">
+                    <a href="/book/bookmark/@book.BookId?status=WantToRead" class="btn btn-sm btn-outline-success">
                         <i class="bi-book"></i> Want to Read
+                    </a>
+                }
+                else @if(book.Status == "WantToRead") {
+                    <a href="/book/bookmark/@book.BookId?status=Reading" class="btn btn-sm btn-outline-warning">
+                        <i class="bi-book-half"></i> Reading
+                    </a>
+                }
+                else @if(book.Status == "Reading") {
+                    <a href="/book/bookmark/@book.BookId?status=Read" class="btn btn-sm btn-outline-primary">
+                        <i class="bi-book-fill"></i> Read
                     </a>
                 }
                 else {
                     <span>@book.Status</span>
                 }
             </td>
-            <td>@book.Score</td>
             <td>
                 <div class="btn-group" role="group">
 
@@ -61,9 +69,6 @@
                     <a href="/book/delete/@book.BookId" class="btn btn-sm btn-outline-danger">
                         <i class="bi-trash"></i> Delete
                     </a>
-
-                    
-                    
                 </div>
             </td>
         </tr>

@@ -18,14 +18,21 @@ public class BookController : Controller
     // action = método
     public ActionResult Read()
     {     
-        var userName = HttpContext.Session.GetString("userName");
-        ViewBag.userName = userName;
-        // var x = db.BooksReaders.FromSql<BookReader>($"SELECT").ToList();
-        var query = from book in db.Books  
-             join br in db.BooksReaders.Include(book => book.Book) 
-             on book.BookId equals br.BookId into bookreader
-             from br in bookreader.DefaultIfEmpty() 
-             select new BookReader  
+        var userId = HttpContext.Session.GetInt32("userId");
+
+        // Código SQL:
+        // select * from Books
+        //     left join BooksReaders 
+        //     on Books.BookId = BooksReaders.BookId 
+        //     and BooksReaders.ReaderId = 1
+
+        // Código correspondente em LinQ:
+        var query = from book in db.Books
+             from bookReader in db.BooksReaders
+                 .Where(br => br.ReaderId == userId)
+                 .Where(br => br.BookId == book.BookId)
+                 .DefaultIfEmpty()
+             select new BookReader
              {
                 BookId = book.BookId,
                 Book = new Book {
@@ -34,10 +41,10 @@ public class BookController : Controller
                     Gender = book.Gender,
                     Synopsis = book.Synopsis
                 },
-                Status = br.Status,
-                Score = br.Score,
+                Status = bookReader.Status,
+                Score = bookReader.Score,
              };
-        return View(query.ToList()); // ~ SELECT * FROM Books
+        return View(query.ToList());
     }
 
     [HttpGet]
@@ -90,15 +97,17 @@ public class BookController : Controller
         return RedirectToAction("Read");
     }
 
-    public ActionResult Bookmark(int bookId) {
+    [HttpGet]
+    public ActionResult Bookmark(int id, string status) {
         var userId = HttpContext.Session.GetInt32("userId");
-        Console.WriteLine(userId);
-        db.BooksReaders.Add(new BookReader {
-            BookId = bookId,
+        var bookReader = new BookReader {
+            BookId = id,
             ReaderId = (int)userId,
-            Status = "Reading",
-            Score = 0
-        });
+            Status = status,
+        };
+        db.Entry(bookReader).State = status == "WantToRead" ?
+                                   EntityState.Added :
+                                   EntityState.Modified;
         db.SaveChanges();
         return RedirectToAction("Read");
     }
