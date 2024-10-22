@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BooksWeb.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BooksWeb.Controllers;
 
@@ -19,7 +20,24 @@ public class BookController : Controller
     {     
         var userName = HttpContext.Session.GetString("userName");
         ViewBag.userName = userName;
-        return View(db.Books.ToList()); // ~ SELECT * FROM Books
+        // var x = db.BooksReaders.FromSql<BookReader>($"SELECT").ToList();
+        var query = from book in db.Books  
+             join br in db.BooksReaders.Include(book => book.Book) 
+             on book.BookId equals br.BookId into bookreader
+             from br in bookreader.DefaultIfEmpty() 
+             select new BookReader  
+             {
+                BookId = book.BookId,
+                Book = new Book {
+                    Author = book.Author,
+                    Title = book.Title,
+                    Gender = book.Gender,
+                    Synopsis = book.Synopsis
+                },
+                Status = br.Status,
+                Score = br.Score,
+             };
+        return View(query.ToList()); // ~ SELECT * FROM Books
     }
 
     [HttpGet]
@@ -69,6 +87,19 @@ public class BookController : Controller
 
         db.SaveChanges();
 
+        return RedirectToAction("Read");
+    }
+
+    public ActionResult Bookmark(int bookId) {
+        var userId = HttpContext.Session.GetInt32("userId");
+        Console.WriteLine(userId);
+        db.BooksReaders.Add(new BookReader {
+            BookId = bookId,
+            ReaderId = (int)userId,
+            Status = "Reading",
+            Score = 0
+        });
+        db.SaveChanges();
         return RedirectToAction("Read");
     }
 }

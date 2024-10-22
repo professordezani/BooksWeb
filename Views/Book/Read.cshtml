@@ -1,4 +1,4 @@
-@model List<BooksWeb.Models.Book>
+@model IEnumerable<dynamic>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,16 +28,29 @@
                 <th>Author</th>
                 <th>Gender</th>
                 <th>Synopsis</th>
+                <th>Status</th>
+                <th>Score</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
         @foreach(var book in Model) {
         <tr>
             <td>@book.BookId</td>
-            <td>@book.Title</td>
-            <td>@book.Author</td>
-            <td>@book.Gender</td>
-            <td>@book.Synopsis</td>
+            <td>@book.Book.Title</td>
+            <td>@book.Book.Author</td>
+            <td>@book.Book.Gender</td>
+            <td>@book.Book.Synopsis</td>
+            <td>
+                @if(book.Status == null) {
+                    <a href="/book/bookmark/@book.BookId" class="btn btn-sm btn-outline-success">
+                        <i class="bi-book"></i> Want to Read
+                    </a>
+                }
+                else {
+                    <span>@book.Status</span>
+                }
+            </td>
+            <td>@book.Score</td>
             <td>
                 <div class="btn-group" role="group">
 
@@ -48,6 +61,8 @@
                     <a href="/book/delete/@book.BookId" class="btn btn-sm btn-outline-danger">
                         <i class="bi-trash"></i> Delete
                     </a>
+
+                    
                     
                 </div>
             </td>
